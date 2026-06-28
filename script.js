@@ -12,22 +12,17 @@ function checkDomain(){
 }
 
 
-function signup() {
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+async function signup() {
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    if (!username || !email || !password) {
-        document.getElementById("msg").innerText = "⚠️ Fill in all fields";
-        return;
-    }
+    const res = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+    });
 
-    // Temporary fake signup (we'll connect database later)
-    localStorage.setItem("user", JSON.stringify({
-        username,
-        email
-    }));
-
-    document.getElementById("msg").innerText =
-        "✅ Account created! Go to login or dashboard soon.";
+    const data = await res.json();
+    document.getElementById("msg").innerText = data.message || data.error;
 }
